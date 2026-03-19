@@ -1,3 +1,4 @@
+import { listarConsultasPorStatus, listarConsultasFuturas, alterarStatusConsulta, calcularFaturamento, } from "./services/consultaService.js";
 // Especialidades
 const cardiologia = {
     id: 1,
@@ -94,9 +95,36 @@ function exibirConsulta(consulta) {
   Status: ${consulta.status}
   `;
 }
-const consulta1 = criarConsulta(1, medico1, paciente1, new Date(), 350);
-const consultaConfirmada = confirmarConsulta(consulta1);
-console.log("=== CONSULTA CONFIRMADA ===");
-console.log(exibirConsulta(consultaConfirmada));
-export {};
+// Atividade 3 - Array tipado de Consultas
+const consultas = [];
+// Consultas base
+const consulta1 = criarConsulta(1, medico1, paciente1, new Date(2025, 2, 19), // 19/03/2025
+350);
+const consulta2 = criarConsulta(2, medico2, paciente2, new Date(2025, 1, 10), // 10/02/2025 (passada)
+200);
+const consulta3 = criarConsulta(3, medico3, paciente3, new Date(2025, 4, 15), // 15/05/2025 (futura)
+500);
+const consulta4 = criarConsulta(4, medico1, paciente2, new Date(2025, 5, 20), // 20/06/2025 (futura)
+150);
+const consulta5 = criarConsulta(5, medico2, paciente1, new Date(2025, 2, 5), // 05/03/2025 (passada)
+400);
+// Atividade 4 - Alterar status utilizando alterarStatusConsulta
+consultas.push(alterarStatusConsulta(consulta1, "confirmada"), alterarStatusConsulta(consulta2, "realizada"), alterarStatusConsulta(consulta3, "cancelada"), alterarStatusConsulta(consulta4, "agendada"), alterarStatusConsulta(consulta5, "realizada"));
+// Exibição
+const primeiraConsulta = consultas[0];
+if (primeiraConsulta) {
+    console.log("=== CONSULTA CONFIRMADA ===");
+    console.log(exibirConsulta(primeiraConsulta));
+}
+console.log("\n=== CONSULTAS POR STATUS (realizada) ===");
+const realizadas = listarConsultasPorStatus(consultas, "realizada");
+realizadas.forEach((c) => console.log(exibirConsulta(c)));
+console.log("\n=== CONSULTAS FUTURAS ===");
+const futuras = listarConsultasFuturas(consultas);
+futuras.forEach((c) => console.log(exibirConsulta(c)));
+const faturamento = calcularFaturamento(consultas);
+console.log(`\n=== FATURAMENTO ===\nTotal: ${faturamento.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+})}`);
 //# sourceMappingURL=index.js.map
